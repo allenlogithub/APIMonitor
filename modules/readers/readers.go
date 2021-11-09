@@ -5,18 +5,22 @@ import (
 	"io/ioutil"
 	"encoding/json"
 	"os"
+
+	"modules/requests"
 )
 
-func ReadJson(path string) map[string]interface{} {
+type config = requests.AppConfig
+
+func ReadSettings(path string) config {
 	f, err := os.Open(path)
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer f.Close()
 	byteData, _ := ioutil.ReadAll(f)
-	
-	var result map[string]interface{}
-	json.Unmarshal([]byte(byteData), &result)
 
-	return result
+	var cfg config
+	json.Unmarshal(byteData, &cfg)
+
+	return cfg
 }

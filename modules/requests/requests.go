@@ -16,13 +16,20 @@ const (
 	JsonContentType = "application/json"
 )
 
+type AppConfig struct {
+	Async bool `json:"async"`
+	Domain string `json:"domain"`
+	Cases []RequestConfig `json:"cases"`
+}
+
 type RequestConfig struct {
 	Url         string
-	RequestType string
-	EstElapse   int64
-	UrlParams   map[string]string
-	FormParams  map[string]string
-	Headers     map[string]string
+	Route	string `json:"route"`
+	RequestType string `json:"request_type"`
+	EstElapse   int64 `json:"est_elapse"`
+	UrlParams   map[string]string `json:"url_params"`
+	FormParams  map[string]string `json:"form_params"`
+	Headers     map[string]string `json:"headers"`
 }
 
 func PerformRequest(requestConfig RequestConfig) error {
