@@ -33,19 +33,8 @@ type RequestConfig struct {
 }
 
 func PerformRequest(requestConfig RequestConfig) error {
-	// add body
-	var body io.Reader
-	if requestConfig.Headers["Content-Type"] == "application/x-www-form-urlencoded" {
-		if len(requestConfig.FormParams) != 0 {
-			body = bytes.NewBufferString(getUrlParams(requestConfig.FormParams))
-		}
-	} else if requestConfig.Headers["Content-Type"] == "application/json" {
-		if len(requestConfig.FormParams) != 0 {
-			body, _ = getJsonParams(requestConfig.FormParams)
-		}
-	} else {
-		body = nil
-	}
+	// get body
+	body := getBody(requestConfig)
 
 	// prepare request
 	request, reqErr := http.NewRequest(requestConfig.RequestType, requestConfig.Url, body)
@@ -115,6 +104,24 @@ func getJsonParams(params map[string]string) (io.Reader, error) {
 		return nil, err
 	}
 	return bytes.NewBuffer(data), nil
+}
+
+func getBody(cfg RequestConfig) (io.Reader) {
+	var body io.Reader
+	if len(cfg.FormParams) != 0 {
+		switch ct := cfg.Headers["Content-Type"]; ct {
+		case "application/x-www-form-urlencoded":
+			body = bytes.NewBufferString(getUrlParams(cfg.FormParams))
+		case "application/json":
+			body, _ = getJsonParams(cfg.FormParams)
+		default:
+			body = nil
+		}
+	} else {
+		body = nil
+	}
+
+	return body
 }
 
 // func PerformTest(requestConfig RequestConfig) error {
