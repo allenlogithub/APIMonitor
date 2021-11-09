@@ -3,10 +3,12 @@ package requests
 import (
 	"net/http"
 	"net/url"
+	"encoding/json"
 	"bytes"
 	"errors"
 	"fmt"
 	"time"
+	"io"
 )
 
 const (
@@ -19,28 +21,39 @@ type RequestConfig struct {
 	RequestType string
 	EstElapse   int64
 	UrlParams   map[string]string
+	FormParams  map[string]string
 	Headers     map[string]string
 }
 
 func PerformRequest(requestConfig RequestConfig) error {
-	fmt.Println()
-	//  prepare request
-	request, reqErr := http.NewRequest(requestConfig.RequestType, requestConfig.Url, nil)
+	// add body
+	var body io.Reader
+	if requestConfig.Headers["Content-Type"] == "application/x-www-form-urlencoded" {
+		if len(requestConfig.FormParams) != 0 {
+			body = bytes.NewBufferString(getUrlParams(requestConfig.FormParams))
+		}
+	} else if requestConfig.Headers["Content-Type"] == "application/json" {
+		if len(requestConfig.FormParams) != 0 {
+			body, _ = getJsonParams(requestConfig.FormParams)
+		}
+	} else {
+		body = nil
+	}
+
+	// prepare request
+	request, reqErr := http.NewRequest(requestConfig.RequestType, requestConfig.Url, body)
 	if reqErr != nil {
 		return errors.New("Error in http.NewRequest, Url:" + requestConfig.Url)
 	}
 
 	// add headers
-	fmt.Println(len(requestConfig.Headers))
 	if len(requestConfig.Headers) != 0 {
-		fmt.Println("INNNN")
+		addHeaders(request, requestConfig.Headers)
 	}
 
-	// add params
-
-	// add forms
+	// add paramss
 	if len(requestConfig.UrlParams) != 0 {
-		request.URL.RawQuery = addUrlParams(requestConfig.UrlParams)
+		request.URL.RawQuery = getUrlParams(requestConfig.UrlParams)
 	}
 
 	// send request
@@ -54,7 +67,7 @@ func PerformRequest(requestConfig RequestConfig) error {
 
 	// response time: elapsed
 	elapsed := time.Since(start)
-	if (elapsed.Nanoseconds() / 1000000) > requestConfig.EstElapse {
+	if (elapsed.Nanoseconds()/1000000) > requestConfig.EstElapse {
 		fmt.Println("Url:", requestConfig.Url, "'s expected elapse time was longer than estamation.")
 	}
 	fmt.Println(elapsed.Nanoseconds()/1000000, "ms")
@@ -80,12 +93,21 @@ func addHeaders(req *http.Request, headers map[string]string) {
 	}
 }
 
-func addUrlParams(params map[string]string) string {
+func getUrlParams(params map[string]string) string {
 	urlParams := url.Values{}
 	for k, v := range params {
 		urlParams.Set(k, v)
 	}
 	return urlParams.Encode()
+}
+
+func getJsonParams(params map[string]string) (io.Reader, error) {
+	data, err := json.Marshal(params)
+	if err != nil {
+		err = errors.New("Invalid Parameters for Content-Type application/json : " + err.Error())
+		return nil, err
+	}
+	return bytes.NewBuffer(data), nil
 }
 
 // func PerformTest(requestConfig RequestConfig) error {
