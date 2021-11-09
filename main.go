@@ -9,8 +9,9 @@ import (
 )
 
 func main() {
-	// load request config
-	requestList := readers.ReadSettings("/source/docs/examples.json")
+	// load args
+	args := readers.GetArgs()
+	requestList := readers.ReadSettings(args.ConfigPath)
 
 	// perform tests
 	for i := 0; i < len(requestList.Cases); i++ {
