@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"modules/requests"
 	"modules/readers"
+	"modules/requests"
 )
 
 func main() {

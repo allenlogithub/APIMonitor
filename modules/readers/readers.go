@@ -1,9 +1,9 @@
 package readers
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"encoding/json"
 	"os"
 
 	"modules/requests"

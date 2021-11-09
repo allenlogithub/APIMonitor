@@ -1,14 +1,14 @@
 package requests
 
 import (
-	"net/http"
-	"net/url"
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"time"
 	"io"
+	"net/http"
+	"net/url"
+	"time"
 )
 
 const (
@@ -17,16 +17,16 @@ const (
 )
 
 type AppConfig struct {
-	Async bool `json:"async"`
-	Domain string `json:"domain"`
-	Cases []RequestConfig `json:"cases"`
+	Async  bool            `json:"async"`
+	Domain string          `json:"domain"`
+	Cases  []RequestConfig `json:"cases"`
 }
 
 type RequestConfig struct {
 	Url         string
-	Route	string `json:"route"`
-	RequestType string `json:"request_type"`
-	EstElapse   int64 `json:"est_elapse"`
+	Route       string            `json:"route"`
+	RequestType string            `json:"request_type"`
+	EstElapse   int64             `json:"est_elapse"`
 	UrlParams   map[string]string `json:"url_params"`
 	FormParams  map[string]string `json:"form_params"`
 	Headers     map[string]string `json:"headers"`
@@ -74,7 +74,7 @@ func PerformRequest(requestConfig RequestConfig) error {
 
 	// response time: elapsed
 	elapsed := time.Since(start)
-	if (elapsed.Nanoseconds()/1000000) > requestConfig.EstElapse {
+	if (elapsed.Nanoseconds() / 1000000) > requestConfig.EstElapse {
 		fmt.Println("Url:", requestConfig.Url, "'s expected elapse time was longer than estamation.")
 	}
 	fmt.Println(elapsed.Nanoseconds()/1000000, "ms")
