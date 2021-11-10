@@ -1,7 +1,7 @@
 package main
 
 import (
-	"errors"
+	// "errors"
 	"fmt"
 
 	"modules/readers"
@@ -16,7 +16,7 @@ func worker(jobs <-chan requests.RequestConfig, results chan<- string) {
 	for job := range jobs {
 		err := requests.PerformRequest(job)
 		if err != nil {
-			errors.New("Error in" + job.Url + "...")
+			// errors.New("Error in" + job.Url + "...")
 			results <- "Failed  " + err.Error()
 		} else {
 			results <- "Success " + job.Url

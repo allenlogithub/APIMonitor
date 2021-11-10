@@ -81,13 +81,11 @@ func PerformRequest(requestConfig RequestConfig) error {
 	// }
 	// fmt.Println("Elapse:", elapsed.Nanoseconds()/1000000, "ms")
 
-	// // load return
-	// if resp.StatusCode == 200 {
-	// 	fmt.Println("Test Success, StatusCode:", resp.StatusCode)
-	// } else {
-	// 	fmt.Println("Test failed, StatusCode:", resp.StatusCode)
-	// }
-	// // fmt.Println(responseToString(requestConfig, resp))
+	// load return
+	if resp.StatusCode != 200 {
+		return errors.New(requestConfig.Url + fmt.Sprintf(" [StatusCode: %d]", resp.StatusCode))
+	}
+	// fmt.Println(responseToString(requestConfig, resp))
 
 	return nil
 }
