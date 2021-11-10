@@ -66,10 +66,15 @@ func PerformRequest(requestConfig RequestConfig) error {
 	if (elapsed.Nanoseconds() / 1000000) > requestConfig.EstElapse {
 		fmt.Println("Url:", requestConfig.Url, "'s expected elapse time was longer than estamation.")
 	}
-	fmt.Println(elapsed.Nanoseconds()/1000000, "ms")
+	fmt.Println("Elapse:", elapsed.Nanoseconds()/1000000, "ms")
 
 	// load return
-	fmt.Println(responseToString(requestConfig, resp))
+	if resp.StatusCode == 200 {
+		fmt.Println("Test Success, StatusCode:", resp.StatusCode)		
+	} else {
+		fmt.Println("Test failed, StatusCode:", resp.StatusCode)
+	}
+	// fmt.Println(responseToString(requestConfig, resp))
 
 	return nil
 }
