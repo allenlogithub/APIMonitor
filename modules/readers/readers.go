@@ -2,10 +2,10 @@ package readers
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
-	"flag"
 
 	"modules/requests"
 )
@@ -30,17 +30,17 @@ func ReadSettings(path string) config {
 	return cfg
 }
 
-func GetArgs() Args {	
+func GetArgs() Args {
 	configPath := flag.String("config-path", "", "Path to the JSON file. (Required)")
 	flag.Parse()
 
 	var args Args
 	if *configPath == "" {
 		fmt.Println("config-path is required")
-        os.Exit(1)
+		os.Exit(1)
 	} else {
 		args.ConfigPath = *configPath
 	}
-	
+
 	return args
 }

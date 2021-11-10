@@ -6,10 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"net/url"
 	"time"
-	"net"
 )
 
 const (
@@ -18,11 +18,11 @@ const (
 )
 
 type AppConfig struct {
-	Async  bool            `json:"async"`
-	Domain string          `json:"domain"`
-	Rounds int          `json:"rounds"`
-	Workers int          `json:"workers"`
-	Cases  []RequestConfig `json:"cases"`
+	Async   bool            `json:"async"`
+	Domain  string          `json:"domain"`
+	Rounds  int             `json:"rounds"`
+	Workers int             `json:"workers"`
+	Cases   []RequestConfig `json:"cases"`
 }
 
 type RequestConfig struct {
@@ -70,7 +70,7 @@ func PerformRequest(requestConfig RequestConfig) error {
 			return errors.New("Error in client.Do; netError, Url:" + requestConfig.Url)
 		default:
 			return errors.New("Error in client.Do, Url:" + requestConfig.Url)
-		}		
+		}
 	}
 	defer resp.Body.Close()
 
@@ -83,7 +83,7 @@ func PerformRequest(requestConfig RequestConfig) error {
 
 	// // load return
 	// if resp.StatusCode == 200 {
-	// 	fmt.Println("Test Success, StatusCode:", resp.StatusCode)		
+	// 	fmt.Println("Test Success, StatusCode:", resp.StatusCode)
 	// } else {
 	// 	fmt.Println("Test failed, StatusCode:", resp.StatusCode)
 	// }
@@ -124,7 +124,7 @@ func getJsonParams(params map[string]string) (io.Reader, error) {
 	return bytes.NewBuffer(data), nil
 }
 
-func getBody(cfg RequestConfig) (io.Reader) {
+func getBody(cfg RequestConfig) io.Reader {
 	var body io.Reader
 	if len(cfg.FormParams) != 0 {
 		switch ct := cfg.Headers["Content-Type"]; ct {
