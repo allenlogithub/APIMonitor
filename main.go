@@ -1,7 +1,6 @@
 package main
 
 import (
-	// "errors"
 	"fmt"
 
 	"modules/readers"
@@ -10,17 +9,13 @@ import (
 
 type (
 	config = requests.RequestConfig
+	respD = requests.ResponseData
 )
 
-func worker(jobs <-chan requests.RequestConfig, results chan<- string) {
+func worker(jobs <-chan requests.RequestConfig, results chan<- requests.ResponseData) {
 	for job := range jobs {
-		err := requests.PerformRequest(job)
-		if err != nil {
-			// errors.New("Error in" + job.Url + "...")
-			results <- "Failed  " + err.Error()
-		} else {
-			results <- "Success " + job.Url
-		}
+		resp := requests.PerformRequest(job)
+		results <- resp
 	}
 }
 
@@ -35,7 +30,7 @@ func main() {
 
 	numJobs := len(requestList.Cases)
 	jobs := make(chan config, numJobs*rounds)
-	results := make(chan string, numJobs*rounds)
+	results := make(chan respD, numJobs*rounds)
 
 	for w := 1; w <= workers; w++ {
 		go worker(jobs, results)

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -35,14 +34,32 @@ type RequestConfig struct {
 	Headers     map[string]string `json:"headers"`
 }
 
-func PerformRequest(requestConfig RequestConfig) error {
+type ResponseData struct {
+	Route string
+	isSuccess bool
+	RequestType string
+	EstElapse int64
+	isTimeout bool
+	StatusCode int
+	ErrorMsg string
+}
+
+func PerformRequest(requestConfig RequestConfig) ResponseData {
 	// get body
 	body := getBody(requestConfig)
 
 	// prepare request
 	request, reqErr := http.NewRequest(requestConfig.RequestType, requestConfig.Url, body)
 	if reqErr != nil {
-		return errors.New("Error in http.NewRequest, Url:" + requestConfig.Url)
+		return ResponseData{
+			Route: requestConfig.Route, 
+			isSuccess: false, 
+			RequestType: requestConfig.RequestType, 
+			EstElapse: requestConfig.EstElapse, 
+			isTimeout: false, 
+			StatusCode: 0,
+			ErrorMsg: "Error in http.NewRequest",
+		}
 	}
 
 	// add headers
@@ -65,11 +82,35 @@ func PerformRequest(requestConfig RequestConfig) error {
 		switch e := respErr.(type) {
 		case net.Error:
 			if e.Timeout() {
-				return errors.New(requestConfig.Url + fmt.Sprintf(" [TimeOut: %d]", requestConfig.EstElapse))
+				return ResponseData{
+					Route: requestConfig.Route, 
+					isSuccess: false, 
+					RequestType: requestConfig.RequestType, 
+					EstElapse: requestConfig.EstElapse, 
+					isTimeout: true, 
+					StatusCode: 0,
+					ErrorMsg: "TimeOut",
+				}
 			}
-			return errors.New("Error in client.Do; netError, Url:" + requestConfig.Url)
+			return ResponseData{
+				Route: requestConfig.Route, 
+				isSuccess: false, 
+				RequestType: requestConfig.RequestType, 
+				EstElapse: requestConfig.EstElapse, 
+				isTimeout: false, 
+				StatusCode: 0,
+				ErrorMsg: "Error in client.Do; netError",
+			}
 		default:
-			return errors.New("Error in client.Do, Url:" + requestConfig.Url)
+			return ResponseData{
+				Route: requestConfig.Route, 
+				isSuccess: false, 
+				RequestType: requestConfig.RequestType, 
+				EstElapse: requestConfig.EstElapse, 
+				isTimeout: false, 
+				StatusCode: 0,
+				ErrorMsg: "Error in client.Do",
+			}
 		}
 	}
 	defer resp.Body.Close()
@@ -83,11 +124,27 @@ func PerformRequest(requestConfig RequestConfig) error {
 
 	// load return
 	if resp.StatusCode != 200 {
-		return errors.New(requestConfig.Url + fmt.Sprintf(" [StatusCode: %d]", resp.StatusCode))
+		return ResponseData{
+			Route: requestConfig.Route, 
+			isSuccess: false, 
+			RequestType: requestConfig.RequestType, 
+			EstElapse: requestConfig.EstElapse, 
+			isTimeout: false, 
+			StatusCode: resp.StatusCode,
+			ErrorMsg: "None",
+		}
 	}
 	// fmt.Println(responseToString(requestConfig, resp))
 
-	return nil
+	return ResponseData{
+		Route: requestConfig.Route, 
+		isSuccess: true, 
+		RequestType: requestConfig.RequestType, 
+		EstElapse: requestConfig.EstElapse, 
+		isTimeout: false, 
+		StatusCode: 200,
+		ErrorMsg: "None",
+	}
 }
 
 func responseToString(requestConfig RequestConfig, response *http.Response) string {
