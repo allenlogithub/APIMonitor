@@ -1,16 +1,18 @@
 {
     "async": false,
     "domain": "http://172.17.0.2:80",
+    "rounds": 100,
+    "workers": 16,
     "cases": [
         {
             "route": "/comment/getAll",
             "request_type": "GET",
-            "est_elapse": 100
+            "est_elapse": 200
         },
         {
             "route": "/comment/get",
             "request_type": "GET",
-            "est_elapse": 100,
+            "est_elapse": 200,
             "url_params": {
                 "start_id": "0",
                 "results_per_page": "2"
@@ -19,7 +21,7 @@
         {
             "route": "/comment/testForm",
             "request_type": "POST",
-            "est_elapse": 100,
+            "est_elapse": 200,
             "headers": {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -31,7 +33,7 @@
         {
             "route": "/comment/add",
             "request_type": "POST",
-            "est_elapse": 100,
+            "est_elapse": 200,
             "headers": {
                 "Content-Type": "application/json"
             },
@@ -43,7 +45,12 @@
         {
             "route": "/comment/getAll",
             "request_type": "GET",
-            "est_elapse": 100
+            "est_elapse": 200
+        },
+        {
+            "route": "/comment/getAlllll",
+            "request_type": "GET",
+            "est_elapse": 200
         }
     ]
 }
