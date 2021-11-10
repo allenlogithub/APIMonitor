@@ -9,7 +9,7 @@ import (
 
 type (
 	config = requests.RequestConfig
-	respD = requests.ResponseData
+	respD  = requests.ResponseData
 )
 
 func worker(jobs <-chan requests.RequestConfig, results chan<- requests.ResponseData) {

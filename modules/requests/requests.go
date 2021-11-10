@@ -35,13 +35,13 @@ type RequestConfig struct {
 }
 
 type ResponseData struct {
-	Route string
-	isSuccess bool
+	Route       string
+	isSuccess   bool
 	RequestType string
-	EstElapse int64
-	isTimeout bool
-	StatusCode int
-	ErrorMsg string
+	EstElapse   int64
+	isTimeout   bool
+	StatusCode  int
+	ErrorMsg    string
 }
 
 func PerformRequest(requestConfig RequestConfig) ResponseData {
@@ -52,13 +52,13 @@ func PerformRequest(requestConfig RequestConfig) ResponseData {
 	request, reqErr := http.NewRequest(requestConfig.RequestType, requestConfig.Url, body)
 	if reqErr != nil {
 		return ResponseData{
-			Route: requestConfig.Route, 
-			isSuccess: false, 
-			RequestType: requestConfig.RequestType, 
-			EstElapse: requestConfig.EstElapse, 
-			isTimeout: false, 
-			StatusCode: 0,
-			ErrorMsg: "Error in http.NewRequest",
+			Route:       requestConfig.Route,
+			isSuccess:   false,
+			RequestType: requestConfig.RequestType,
+			EstElapse:   requestConfig.EstElapse,
+			isTimeout:   false,
+			StatusCode:  0,
+			ErrorMsg:    "Error in http.NewRequest",
 		}
 	}
 
@@ -83,33 +83,33 @@ func PerformRequest(requestConfig RequestConfig) ResponseData {
 		case net.Error:
 			if e.Timeout() {
 				return ResponseData{
-					Route: requestConfig.Route, 
-					isSuccess: false, 
-					RequestType: requestConfig.RequestType, 
-					EstElapse: requestConfig.EstElapse, 
-					isTimeout: true, 
-					StatusCode: 0,
-					ErrorMsg: "TimeOut",
+					Route:       requestConfig.Route,
+					isSuccess:   false,
+					RequestType: requestConfig.RequestType,
+					EstElapse:   requestConfig.EstElapse,
+					isTimeout:   true,
+					StatusCode:  0,
+					ErrorMsg:    "TimeOut",
 				}
 			}
 			return ResponseData{
-				Route: requestConfig.Route, 
-				isSuccess: false, 
-				RequestType: requestConfig.RequestType, 
-				EstElapse: requestConfig.EstElapse, 
-				isTimeout: false, 
-				StatusCode: 0,
-				ErrorMsg: "Error in client.Do; netError",
+				Route:       requestConfig.Route,
+				isSuccess:   false,
+				RequestType: requestConfig.RequestType,
+				EstElapse:   requestConfig.EstElapse,
+				isTimeout:   false,
+				StatusCode:  0,
+				ErrorMsg:    "Error in client.Do; netError",
 			}
 		default:
 			return ResponseData{
-				Route: requestConfig.Route, 
-				isSuccess: false, 
-				RequestType: requestConfig.RequestType, 
-				EstElapse: requestConfig.EstElapse, 
-				isTimeout: false, 
-				StatusCode: 0,
-				ErrorMsg: "Error in client.Do",
+				Route:       requestConfig.Route,
+				isSuccess:   false,
+				RequestType: requestConfig.RequestType,
+				EstElapse:   requestConfig.EstElapse,
+				isTimeout:   false,
+				StatusCode:  0,
+				ErrorMsg:    "Error in client.Do",
 			}
 		}
 	}
@@ -125,25 +125,25 @@ func PerformRequest(requestConfig RequestConfig) ResponseData {
 	// load return
 	if resp.StatusCode != 200 {
 		return ResponseData{
-			Route: requestConfig.Route, 
-			isSuccess: false, 
-			RequestType: requestConfig.RequestType, 
-			EstElapse: requestConfig.EstElapse, 
-			isTimeout: false, 
-			StatusCode: resp.StatusCode,
-			ErrorMsg: "None",
+			Route:       requestConfig.Route,
+			isSuccess:   false,
+			RequestType: requestConfig.RequestType,
+			EstElapse:   requestConfig.EstElapse,
+			isTimeout:   false,
+			StatusCode:  resp.StatusCode,
+			ErrorMsg:    "None",
 		}
 	}
 	// fmt.Println(responseToString(requestConfig, resp))
 
 	return ResponseData{
-		Route: requestConfig.Route, 
-		isSuccess: true, 
-		RequestType: requestConfig.RequestType, 
-		EstElapse: requestConfig.EstElapse, 
-		isTimeout: false, 
-		StatusCode: 200,
-		ErrorMsg: "None",
+		Route:       requestConfig.Route,
+		isSuccess:   true,
+		RequestType: requestConfig.RequestType,
+		EstElapse:   requestConfig.EstElapse,
+		isTimeout:   false,
+		StatusCode:  200,
+		ErrorMsg:    "None",
 	}
 }
 
