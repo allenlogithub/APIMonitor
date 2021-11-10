@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+	"net"
 )
 
 const (
@@ -19,6 +20,8 @@ const (
 type AppConfig struct {
 	Async  bool            `json:"async"`
 	Domain string          `json:"domain"`
+	Rounds int          `json:"rounds"`
+	Workers int          `json:"workers"`
 	Cases  []RequestConfig `json:"cases"`
 }
 
@@ -53,28 +56,38 @@ func PerformRequest(requestConfig RequestConfig) error {
 	}
 
 	// send request
-	client := &http.Client{}
-	start := time.Now()
+	client := &http.Client{
+		Timeout: time.Duration(requestConfig.EstElapse) * time.Millisecond,
+	}
+	// start := time.Now()
 	resp, respErr := client.Do(request)
 	if respErr != nil {
-		return errors.New("Error in client.Do, Url:" + requestConfig.Url)
+		switch e := respErr.(type) {
+		case net.Error:
+			if e.Timeout() {
+				return errors.New(requestConfig.Url + fmt.Sprintf(" [TimeOut: %d]", requestConfig.EstElapse))
+			}
+			return errors.New("Error in client.Do; netError, Url:" + requestConfig.Url)
+		default:
+			return errors.New("Error in client.Do, Url:" + requestConfig.Url)
+		}		
 	}
 	defer resp.Body.Close()
 
-	// response time: elapsed
-	elapsed := time.Since(start)
-	if (elapsed.Nanoseconds() / 1000000) > requestConfig.EstElapse {
-		fmt.Println("Url:", requestConfig.Url, "'s expected elapse time was longer than estamation.")
-	}
-	fmt.Println("Elapse:", elapsed.Nanoseconds()/1000000, "ms")
+	// // response time: elapsed
+	// elapsed := time.Since(start)
+	// if (elapsed.Nanoseconds() / 1000000) > requestConfig.EstElapse {
+	// 	fmt.Println("Url:", requestConfig.Url, "'s expected elapse time was longer than estamation.")
+	// }
+	// fmt.Println("Elapse:", elapsed.Nanoseconds()/1000000, "ms")
 
-	// load return
-	if resp.StatusCode == 200 {
-		fmt.Println("Test Success, StatusCode:", resp.StatusCode)		
-	} else {
-		fmt.Println("Test failed, StatusCode:", resp.StatusCode)
-	}
-	// fmt.Println(responseToString(requestConfig, resp))
+	// // load return
+	// if resp.StatusCode == 200 {
+	// 	fmt.Println("Test Success, StatusCode:", resp.StatusCode)		
+	// } else {
+	// 	fmt.Println("Test failed, StatusCode:", resp.StatusCode)
+	// }
+	// // fmt.Println(responseToString(requestConfig, resp))
 
 	return nil
 }
