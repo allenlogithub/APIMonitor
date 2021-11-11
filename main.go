@@ -5,11 +5,7 @@ import (
 
 	"modules/readers"
 	"modules/requests"
-)
-
-type (
-	config = requests.RequestConfig
-	respD  = requests.ResponseData
+	"modules/export"
 )
 
 func worker(jobs <-chan requests.RequestConfig, results chan<- requests.ResponseData) {
@@ -29,8 +25,8 @@ func main() {
 	workers := requestList.Workers
 
 	numJobs := len(requestList.Cases)
-	jobs := make(chan config, numJobs*rounds)
-	results := make(chan respD, numJobs*rounds)
+	jobs := make(chan requests.RequestConfig, numJobs*rounds)
+	results := make(chan requests.ResponseData, numJobs*rounds)
 
 	for w := 1; w <= workers; w++ {
 		go worker(jobs, results)
@@ -45,9 +41,16 @@ func main() {
 	}
 	close(jobs)
 
+	res := []requests.ResponseData{}
 	for i := 0; i < numJobs*rounds; i++ {
-		// <-results
-		x := <-results
-		fmt.Println(x)
+		// x := <-results
+		// fmt.Println(x)
+		res = append(res, <-results)
+	}
+
+	// wrtie data to a CSV
+	CSVErr := export.ToCSV(res, "/source/docs/examples.json")
+	if CSVErr != nil {
+		fmt.Println(CSVErr)
 	}
 }
