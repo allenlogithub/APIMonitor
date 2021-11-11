@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -30,7 +31,7 @@ type RequestConfig struct {
 	RequestType string            `json:"request_type"`
 	EstElapse   int64             `json:"est_elapse"`
 	UrlParams   map[string]string `json:"url_params"`
-	FormParams  map[string]string `json:"form_params"`
+	FormParams  map[string]interface{} `json:"form_params"`
 	Headers     map[string]string `json:"headers"`
 }
 
@@ -170,7 +171,15 @@ func getUrlParams(params map[string]string) string {
 	return urlParams.Encode()
 }
 
-func getJsonParams(params map[string]string) (io.Reader, error) {
+func getFormParams(params map[string]interface{}) string {
+	urlParams := url.Values{}
+	for k, v := range params {
+		urlParams.Set(k, fmt.Sprintf("%v", v))
+	}
+	return urlParams.Encode()
+}
+
+func getJsonParams(params map[string]interface{}) (io.Reader, error) {
 	data, err := json.Marshal(params)
 	if err != nil {
 		err = errors.New("Invalid Parameters for Content-Type application/json : " + err.Error())
@@ -184,7 +193,7 @@ func getBody(cfg RequestConfig) io.Reader {
 	if len(cfg.FormParams) != 0 {
 		switch ct := cfg.Headers["Content-Type"]; ct {
 		case "application/x-www-form-urlencoded":
-			body = bytes.NewBufferString(getUrlParams(cfg.FormParams))
+			body = bytes.NewBufferString(getFormParams(cfg.FormParams))
 		case "application/json":
 			body, _ = getJsonParams(cfg.FormParams)
 		default:
