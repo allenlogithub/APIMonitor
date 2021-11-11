@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
+	"modules/export"
 	"modules/readers"
 	"modules/requests"
-	"modules/export"
 )
 
 func worker(jobs <-chan requests.RequestConfig, results chan<- requests.ResponseData) {

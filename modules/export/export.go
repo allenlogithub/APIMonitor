@@ -2,8 +2,8 @@ package export
 
 import (
 	"bytes"
-	"fmt"
 	"errors"
+	"fmt"
 	"os"
 	"reflect"
 
@@ -29,7 +29,7 @@ func ToCSV(data []requests.ResponseData, path string) error {
 	}
 	str = str + "\n"
 	writeString(f, str)
-	
+
 	// get data and write line
 	for i := range data {
 		v := reflect.ValueOf(data[i])
@@ -58,8 +58,8 @@ func writeString(f *os.File, s string) error {
 func getHeaders(data requests.ResponseData) ([]string, error) {
 	val := reflect.ValueOf(data)
 	var headers []string
-    for i := 0; i < val.NumField(); i++ {     
+	for i := 0; i < val.NumField(); i++ {
 		headers = append(headers, val.Type().Field(i).Name)
-    }
+	}
 	return headers, nil
 }
