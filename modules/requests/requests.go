@@ -27,12 +27,12 @@ type AppConfig struct {
 
 type RequestConfig struct {
 	Url         string
-	Route       string            `json:"route"`
-	RequestType string            `json:"request_type"`
-	EstElapse   int64             `json:"est_elapse"`
-	UrlParams   map[string]string `json:"url_params"`
+	Route       string                 `json:"route"`
+	RequestType string                 `json:"request_type"`
+	EstElapse   int64                  `json:"est_elapse"`
+	UrlParams   map[string]string      `json:"url_params"`
 	FormParams  map[string]interface{} `json:"form_params"`
-	Headers     map[string]string `json:"headers"`
+	Headers     map[string]string      `json:"headers"`
 }
 
 type ResponseData struct {
