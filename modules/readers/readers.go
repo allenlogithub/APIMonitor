@@ -60,5 +60,5 @@ func getLocatedFolder(path string) string {
 		}
 	}
 
-	return path[:lastSlashIdx + 1]
+	return path[:lastSlashIdx+1]
 }

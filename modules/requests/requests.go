@@ -37,10 +37,10 @@ type RequestConfig struct {
 
 type ResponseData struct {
 	Route       string
-	isSuccess   bool
+	IsSuccess   bool
 	RequestType string
 	EstElapse   int64
-	isTimeout   bool
+	IsTimeout   bool
 	StatusCode  int
 	ErrorMsg    string
 }
@@ -54,10 +54,10 @@ func PerformRequest(requestConfig RequestConfig) ResponseData {
 	if reqErr != nil {
 		return ResponseData{
 			Route:       requestConfig.Route,
-			isSuccess:   false,
+			IsSuccess:   false,
 			RequestType: requestConfig.RequestType,
 			EstElapse:   requestConfig.EstElapse,
-			isTimeout:   false,
+			IsTimeout:   false,
 			StatusCode:  0,
 			ErrorMsg:    "Error in http.NewRequest",
 		}
@@ -85,30 +85,30 @@ func PerformRequest(requestConfig RequestConfig) ResponseData {
 			if e.Timeout() {
 				return ResponseData{
 					Route:       requestConfig.Route,
-					isSuccess:   false,
+					IsSuccess:   false,
 					RequestType: requestConfig.RequestType,
 					EstElapse:   requestConfig.EstElapse,
-					isTimeout:   true,
+					IsTimeout:   true,
 					StatusCode:  0,
 					ErrorMsg:    "TimeOut",
 				}
 			}
 			return ResponseData{
 				Route:       requestConfig.Route,
-				isSuccess:   false,
+				IsSuccess:   false,
 				RequestType: requestConfig.RequestType,
 				EstElapse:   requestConfig.EstElapse,
-				isTimeout:   false,
+				IsTimeout:   false,
 				StatusCode:  0,
 				ErrorMsg:    "Error in client.Do; netError",
 			}
 		default:
 			return ResponseData{
 				Route:       requestConfig.Route,
-				isSuccess:   false,
+				IsSuccess:   false,
 				RequestType: requestConfig.RequestType,
 				EstElapse:   requestConfig.EstElapse,
-				isTimeout:   false,
+				IsTimeout:   false,
 				StatusCode:  0,
 				ErrorMsg:    "Error in client.Do",
 			}
@@ -127,10 +127,10 @@ func PerformRequest(requestConfig RequestConfig) ResponseData {
 	if resp.StatusCode != 200 {
 		return ResponseData{
 			Route:       requestConfig.Route,
-			isSuccess:   false,
+			IsSuccess:   false,
 			RequestType: requestConfig.RequestType,
 			EstElapse:   requestConfig.EstElapse,
-			isTimeout:   false,
+			IsTimeout:   false,
 			StatusCode:  resp.StatusCode,
 			ErrorMsg:    "None",
 		}
@@ -139,10 +139,10 @@ func PerformRequest(requestConfig RequestConfig) ResponseData {
 
 	return ResponseData{
 		Route:       requestConfig.Route,
-		isSuccess:   true,
+		IsSuccess:   true,
 		RequestType: requestConfig.RequestType,
 		EstElapse:   requestConfig.EstElapse,
-		isTimeout:   false,
+		IsTimeout:   false,
 		StatusCode:  200,
 		ErrorMsg:    "None",
 	}

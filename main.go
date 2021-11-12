@@ -49,7 +49,7 @@ func main() {
 	}
 
 	// wrtie data to a CSV
-	CSVErr := export.ToCSV(res, args.OutputPath + "/statusGo_raw")
+	CSVErr := export.ToCSV(res, args.OutputPath+"/statusGo_raw")
 	if CSVErr != nil {
 		fmt.Println(CSVErr)
 	}
