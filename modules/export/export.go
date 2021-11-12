@@ -12,15 +12,16 @@ import (
 
 func ToCSV(data []requests.ResponseData, path string) error {
 	// create a file
-	f, createRrr := os.Create(path + ".csv")
-	if createRrr != nil {
+	f, createErr := os.Create(path + ".csv")
+	if createErr != nil {
+		fmt.Println(createErr)
 		return errors.New("Create CSV file failed.")
 	}
 	defer f.Close()
 
 	// get headers and write line
-	headers, GHErr := getHeaders(data[0])
-	if GHErr != nil {
+	headers, gHErr := getHeaders(data[0])
+	if gHErr != nil {
 		return errors.New("Get Headers failed.")
 	}
 	str := headers[0]
@@ -47,8 +48,8 @@ func ToCSV(data []requests.ResponseData, path string) error {
 
 func writeString(f *os.File, s string) error {
 	buf := bytes.NewBufferString(s)
-	_, NBSErr := buf.WriteTo(f)
-	if NBSErr != nil {
+	_, nBSErr := buf.WriteTo(f)
+	if nBSErr != nil {
 		return errors.New("Error in w.WriteString in ToCSV")
 	}
 
