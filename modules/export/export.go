@@ -6,11 +6,14 @@ import (
 	"fmt"
 	"os"
 	"reflect"
-
-	"modules/requests"
 )
 
-func ToCSV(data []requests.ResponseData, path string) error {
+type csvStruct struct {
+	Data    []interface{}
+	Headers []string
+}
+
+func (wrap csvStruct) ToCSV(path string) error {
 	// create a file
 	f, createErr := os.Create(path + ".csv")
 	if createErr != nil {
@@ -21,7 +24,7 @@ func ToCSV(data []requests.ResponseData, path string) error {
 
 	str := ""
 	// get headers
-	headers := getHeaders(data[0])
+	headers := wrap.Headers
 	str = str + headers[0]
 	for i := 1; i < len(headers); i++ {
 		str = str + "," + headers[i]
@@ -29,8 +32,8 @@ func ToCSV(data []requests.ResponseData, path string) error {
 	str = str + "\n"
 
 	// get data
-	for i := range data {
-		vals := getValues(data[i])
+	for i := range wrap.Data {
+		vals := getValues(wrap.Data[i])
 		str = str + fmt.Sprintf("%#v", vals[0])
 		for j := 1; j < len(vals); j++ {
 			str = str + "," + fmt.Sprintf("%#v", vals[j])
@@ -54,7 +57,7 @@ func writeString(f *os.File, s string) error {
 	return nil
 }
 
-func getHeaders(data requests.ResponseData) []string {
+func getHeaders(data interface{}) []string {
 	val := reflect.ValueOf(data)
 	var headers []string
 	for i := 0; i < val.NumField(); i++ {
@@ -64,7 +67,7 @@ func getHeaders(data requests.ResponseData) []string {
 	return headers
 }
 
-func getValues(data requests.ResponseData) []interface{} {
+func getValues(data interface{}) []interface{} {
 	val := reflect.ValueOf(data)
 	var values []interface{}
 	for i := 0; i < val.NumField(); i++ {
@@ -72,4 +75,11 @@ func getValues(data requests.ResponseData) []interface{} {
 	}
 
 	return values
+}
+
+func CSVWrapper(data []interface{}) csvStruct {
+	return csvStruct{
+		Data:    data,
+		Headers: getHeaders(data[0]),
+	}
 }

@@ -41,7 +41,7 @@ func main() {
 	}
 	close(jobs)
 
-	res := []requests.ResponseData{}
+	var res []interface{}
 	for i := 0; i < numJobs*rounds; i++ {
 		// x := <-results
 		// fmt.Println(x)
@@ -49,7 +49,7 @@ func main() {
 	}
 
 	// wrtie data to a CSV
-	CSVErr := export.ToCSV(res, args.OutputPath+"/statusGo_raw")
+	CSVErr := export.CSVWrapper(res).ToCSV(args.OutputPath + "/statusGo_raw")
 	if CSVErr != nil {
 		fmt.Println(CSVErr)
 	}
