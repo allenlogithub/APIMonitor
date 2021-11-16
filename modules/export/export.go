@@ -13,7 +13,7 @@ type csvStruct struct {
 	Headers []string
 }
 
-func (wrap csvStruct) ToCSV(path string) error {
+func (wrap *csvStruct) ToCSV(path string) error {
 	// create a file
 	f, createErr := os.Create(path + ".csv")
 	if createErr != nil {
@@ -77,9 +77,9 @@ func getValues(data interface{}) []interface{} {
 	return values
 }
 
-func CSVWrapper(data []interface{}) csvStruct {
-	return csvStruct{
-		Data:    data,
-		Headers: getHeaders(data[0]),
+func CSVWrapper(data *[]interface{}) *csvStruct {
+	return &csvStruct{
+		Data:    *data,
+		Headers: getHeaders((*data)[0]),
 	}
 }
