@@ -11,18 +11,18 @@ import (
 )
 
 func TestGetLocatedFolder(t *testing.T) {
-	paths := []struct {
-		x string
-		y string
+	cases := []struct {
+		input string
+		want string
 	}{
 		{"/a/b/", "/a/b/"},
 		{"/a/b/c", "/a/b/"},
 	}
 
-	for _, path := range paths {
-		rt := getLocatedFolder(path.x)
-		if rt != path.y {
-			t.Errorf("readers.getLocatedFolder of (%s) was incorrect, got: %s, want: %s", path.x, rt, path.y)
+	for _, c := range cases {
+		rt := getLocatedFolder(c.input)
+		if rt != c.want {
+			t.Errorf("readers.getLocatedFolder of (%s) was incorrect, got: %s, want: %s", c.input, rt, c.want)
 		}
 	}
 }
