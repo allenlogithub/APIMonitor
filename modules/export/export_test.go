@@ -11,10 +11,10 @@ import (
 )
 
 func equalSlice(s1 []interface{}, s2 []interface{}) bool {
-	if len(s1) != len(s2) {	
+	if len(s1) != len(s2) {
 		return false
 	}
-	for i, v := range(s1) {
+	for i, v := range s1 {
 		if v != s2[i] {
 			return false
 		}
@@ -40,7 +40,7 @@ func TestGetHeaders(t *testing.T) {
 	type Want []interface{}
 	cases := []struct {
 		input Input
-		want Want
+		want  Want
 	}{
 		{
 			Input{
@@ -52,12 +52,12 @@ func TestGetHeaders(t *testing.T) {
 				"Y",
 			},
 		},
-	}	
+	}
 
 	for _, c := range cases {
 		rt := stringSliceToInterfaceSlice(getHeaders(c.input))
 		if !equalSlice(rt, c.want) {
-			t.Errorf("readers.getHeaders of (%s) was incorrect, got: %s, want: %s", c.input, rt, c.want)
+			t.Errorf("export.getHeaders of (%s) was incorrect, got: %s, want: %s", c.input, rt, c.want)
 		}
 	}
 }
@@ -71,7 +71,7 @@ func TestGetValues(t *testing.T) {
 	type Want []interface{}
 	cases := []struct {
 		input Input
-		want Want
+		want  Want
 	}{
 		{
 			Input{
@@ -97,12 +97,12 @@ func TestGetValues(t *testing.T) {
 				"cba",
 			},
 		},
-	}	
+	}
 
 	for _, c := range cases {
 		rt := getValues(c.input)
 		if !equalSlice(rt, c.want) {
-			t.Errorf("readers.getValues of (%#v) was incorrect, got: %#v, want: %#v", c.input, rt, c.want)
+			t.Errorf("export.getValues of (%#v) was incorrect, got: %#v, want: %#v", c.input, rt, c.want)
 		}
 	}
 }

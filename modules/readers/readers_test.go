@@ -7,8 +7,8 @@ to test it, do the following:
 package readers
 
 import (
-	"testing"
 	"reflect"
+	"testing"
 
 	"modules/requests"
 )
@@ -16,7 +16,7 @@ import (
 func TestGetLocatedFolder(t *testing.T) {
 	cases := []struct {
 		input string
-		want string
+		want  string
 	}{
 		{"/a/b/", "/a/b/"},
 		{"/a/b/c", "/a/b/"},
