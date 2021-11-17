@@ -205,7 +205,3 @@ func getBody(cfg RequestConfig) io.Reader {
 
 	return body
 }
-
-// func PerformTest(requestConfig RequestConfig) error {
-// 	performRequest
-// }

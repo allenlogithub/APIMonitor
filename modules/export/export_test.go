@@ -1,14 +1,15 @@
 /*
 to test it, do the following:
 	move the "modules" folder under the GOROOT
+	go clean -testcache && \
 	go test -v -cover modules/export
 */
 
 package export
 
 import (
-	"testing"
 	"reflect"
+	"testing"
 )
 
 func equalSlice(s1 []interface{}, s2 []interface{}) bool {
@@ -112,7 +113,7 @@ func TestCSVWrapper(t *testing.T) {
 	type data struct {
 		X interface{}
 		Y interface{}
-	}	
+	}
 	d1 := data{
 		X: "abc",
 		Y: "cba",
@@ -131,7 +132,7 @@ func TestCSVWrapper(t *testing.T) {
 	}
 	cases := []struct {
 		input []interface{}
-		want csvStruct
+		want  csvStruct
 	}{
 		{
 			[]interface{}{
@@ -139,7 +140,7 @@ func TestCSVWrapper(t *testing.T) {
 				d2,
 			},
 			csvStruct{
-				Data: []interface{}{d1, d2},
+				Data:    []interface{}{d1, d2},
 				Headers: []string{"X", "Y"},
 			},
 		},
@@ -148,7 +149,7 @@ func TestCSVWrapper(t *testing.T) {
 				d1,
 			},
 			csvStruct{
-				Data: []interface{}{d1},
+				Data:    []interface{}{d1},
 				Headers: []string{"X", "Y"},
 			},
 		},
@@ -160,7 +161,7 @@ func TestCSVWrapper(t *testing.T) {
 				d4,
 			},
 			csvStruct{
-				Data: []interface{}{d1, d2, d3, d4},
+				Data:    []interface{}{d1, d2, d3, d4},
 				Headers: []string{"X", "Y"},
 			},
 		},
@@ -168,7 +169,7 @@ func TestCSVWrapper(t *testing.T) {
 	for _, c := range cases {
 		rt := CSVWrapper(&c.input)
 		if !reflect.DeepEqual(*rt, c.want) {
-			t.Errorf("export.getValues of (%#v) was incorrect, got: %#v, want: %#v", &c.input, *rt, c.want)
+			t.Errorf("export.CSVWrapper of (%#v) was incorrect, got: %#v, want: %#v", &c.input, *rt, c.want)
 		}
 	}
 }

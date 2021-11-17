@@ -8,11 +8,11 @@ to test it, do the following:
 package readers
 
 import (
-	"reflect"
 	"bytes"
-	"os"
-	"testing"
 	"encoding/json"
+	"os"
+	"reflect"
+	"testing"
 
 	"modules/requests"
 )
