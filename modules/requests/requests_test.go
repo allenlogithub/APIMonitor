@@ -35,3 +35,40 @@ func TestGetUrlParams(t *testing.T) {
 		}
 	}
 }
+
+func TestGetFormParams(t *testing.T) {
+	type Input map[string]interface{}
+	cases := []struct{
+		input Input
+		want string
+	}{
+		{
+			Input{
+				"A": "1",
+				"B": "2",
+			},
+			"A=1&B=2",
+		},{
+			Input{},
+			"",
+		},{
+			Input{
+				"A": 1,
+				"B": true,
+			},
+			"A=1&B=true",
+		},{
+			Input{
+				"A": 1.1,
+				"B": nil,
+			},
+			"A=1.1&B=%3Cnil%3E",
+		},
+	}
+	for _, c := range cases {
+		rt := getFormParams(c.input)
+		if rt != c.want {
+			t.Errorf("requests.getFormParams of (%#v) was incorrect, got: %#v, want: %#v", c.input, rt, c.want)
+		}
+	}
+}
