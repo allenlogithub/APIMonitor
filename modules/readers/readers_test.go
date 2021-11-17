@@ -1,6 +1,7 @@
 /*
 to test it, do the following:
 	move the "modules" folder under the GOROOT
+	go clean -testcache && \
 	go test -v -cover modules/readers
 */
 
@@ -8,7 +9,10 @@ package readers
 
 import (
 	"reflect"
+	"bytes"
+	"os"
 	"testing"
+	"encoding/json"
 
 	"modules/requests"
 )
@@ -31,18 +35,45 @@ func TestGetLocatedFolder(t *testing.T) {
 }
 
 func TestReadSettings(t *testing.T) {
+	filePath := "/source/test.json"
+	jsonString := `{
+	"domain": "http://172.17.0.2:80",
+	"rounds": 2,
+	"workers": 2,
+	"cases": [
+		{
+			"route": "/route",
+			"request_type": "GET",
+			"est_elapse": 200
+		}
+	]
+}
+	`
+	// assign json data into a defined struct
 	var cfg requests.AppConfig
-	cfg.Domain = "http://172.17.0.2:80"
-	cfg.Rounds = 2
-	cfg.Workers = 2
-	var case1 requests.RequestConfig
-	case1.Route = "/route"
-	case1.RequestType = "GET"
-	case1.EstElapse = 200
-	cfg.Cases = append(cfg.Cases, case1)
+	json.Unmarshal([]byte(jsonString), &cfg)
 
-	r := ReadSettings("/source/docs/simpleExample.json")
+	// create file and write json data into it
+	f, err := os.Create(filePath)
+	if err != nil {
+		t.Errorf("Create test.json file failed.")
+	}
+	defer f.Close()
+	buf := bytes.NewBufferString(jsonString)
+	_, err = buf.WriteTo(f)
+	if err != nil {
+		t.Errorf("Error in writing json string to test.json")
+	}
+
+	// load the json data from the generated json file
+	r := ReadSettings(filePath)
 	if !reflect.DeepEqual(cfg, r) {
 		t.Errorf("readers.ReadSettings of (%#v) was incorrect, got: %#v, want: %#v", "/source/docs/simpleExample.json", r, cfg)
+	}
+
+	// remove the json file
+	err = os.Remove(filePath)
+	if err != nil {
+		t.Errorf("Error in removing json file")
 	}
 }
