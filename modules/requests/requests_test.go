@@ -13,9 +13,9 @@ import (
 
 func TestGetUrlParams(t *testing.T) {
 	type Input map[string]string
-	cases := []struct{
+	cases := []struct {
 		input Input
-		want string
+		want  string
 	}{
 		{
 			Input{
@@ -23,7 +23,7 @@ func TestGetUrlParams(t *testing.T) {
 				"B": "2",
 			},
 			"A=1&B=2",
-		},{
+		}, {
 			Input{},
 			"",
 		},
@@ -38,9 +38,9 @@ func TestGetUrlParams(t *testing.T) {
 
 func TestGetFormParams(t *testing.T) {
 	type Input map[string]interface{}
-	cases := []struct{
+	cases := []struct {
 		input Input
-		want string
+		want  string
 	}{
 		{
 			Input{
@@ -48,16 +48,16 @@ func TestGetFormParams(t *testing.T) {
 				"B": "2",
 			},
 			"A=1&B=2",
-		},{
+		}, {
 			Input{},
 			"",
-		},{
+		}, {
 			Input{
 				"A": 1,
 				"B": true,
 			},
 			"A=1&B=true",
-		},{
+		}, {
 			Input{
 				"A": 1.1,
 				"B": nil,
