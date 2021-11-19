@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"modules/export"
-	"modules/readers"
 	"modules/jobs"
+	"modules/readers"
 )
 
 func main() {
@@ -16,9 +16,9 @@ func main() {
 	// run
 	var res *[]interface{}
 	if requestList.Async {
-		res = jobs.Run(requestList, requestList.Rounds*len(requestList.Cases))
+		res = jobs.Run(&requestList, requestList.Rounds*len(requestList.Cases))
 	} else {
-		res = jobs.Run(requestList, requestList.Rounds)
+		res = jobs.Run(&requestList, requestList.Rounds)
 	}
 
 	// wrtie data to a CSV
