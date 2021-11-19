@@ -23,7 +23,7 @@
 - Follow the docs/examples.json  
 General App Settings:  
 		&nbsp;	`async`  
-    &nbsp;&nbsp;&nbsp;&nbsp;  (not functioning now)  
+    &nbsp;&nbsp;&nbsp;&nbsp;  (true: async on each API, false: async on each API set)  
 		&nbsp;	`domain`  
     &nbsp;&nbsp;&nbsp;&nbsp;  (Target server)  
 		&nbsp;  `rounds`  
